@@ -8,6 +8,9 @@ class GiftNotInListError(RuntimeError):
     pass
 
 
+class GiftAlreadyPurchasedError(RuntimeError):
+    pass
+
 class GiftList:
     def __init__(self):
         db = settings.get_db_connection()
@@ -22,10 +25,20 @@ class GiftList:
                 'purchased': False
             }
         ).inserted_id
+
+    def remove(self, product_id):
+        if self.col.count_documents({'product_id':product_id}) == 0:
+            raise GiftNotInListError(product_id)
+        
+        self.col.delete_one({'product_id': product_id})
     
     def purchase(self, product_id):
         if self.col.count_documents({'product_id':product_id}) == 0:
             raise GiftNotInListError(product_id)
+        if self.col.count_documents({
+              'product_id':product_id,
+              'purchased': True}) == 1:
+            raise GiftAlreadyPurchasedError(product_id)
         query = {'product_id': product_id}
         update = {'$set': {'purchased': True}}
         self.col.update_one(query, update)
@@ -34,8 +47,14 @@ class GiftList:
     def count(self):
         return self.col.count_documents({})
 
-    def find(self):
-        return self.col.aggregate([
+    def find(self, purchased=None):
+
+        pipeline = []
+        if purchased is not None:
+            pipeline.append({
+                '$match': {'purchased': purchased}
+            })
+        pipeline.extend([
             {
                 '$lookup': {
                     'from': 'products',
@@ -53,3 +72,4 @@ class GiftList:
                     "product_id": 0
             }}
         ])
+        return self.col.aggregate(pipeline)
