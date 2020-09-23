@@ -10,7 +10,9 @@ services:
         tty: true
         stdin_open: true
         environment:
-            DB: mongodb://mongo/
+            DB: mongodb://root:example@mongo/
+        volumes:
+            - ./:/srv
     mongo:
         image: mongo
         environment:
