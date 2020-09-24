@@ -1,17 +1,11 @@
-<!doctype html>
-<html>
-    <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="static/giftlist.js"></script>
-        <title>Wedding Gift List</title>
-    </head>
-    <body>
-        <div>
-            <table id="gift_list">
-            </table>
-            <nav>
-                <a href="/add_gift.html">Add a gift</a>
-            </nav>
-        </div>
-    </body>
-</html>
+
+{% extends "base.html" %}
+{% block content %}
+    <h1>Wedding gift list</h1>
+    <table>
+        <tbody id="gift_list"></tbody>
+    </table>
+    <nav>
+        <a href="/add_gift.html">Add a gift</a>
+    </nav>
+{% endblock %}

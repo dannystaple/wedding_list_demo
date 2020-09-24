@@ -2,20 +2,25 @@
 $(function() {
 
     function make_row(gift_item) {
-        return $.html(
-            "<tr><td>" + gift_item.product.name +
-            "</tr></td>"
-        )
+        purchase_status = "";
+        if(gift_item.purchased) {
+            purchase_status = "✔️";
+        }
+
+        return  "<tr><td>" + gift_item.product.name +
+            "</td><td>£" + gift_item.product.price + 
+            "</td><td>" + purchase_status + 
+            "</td></tr>";
     }
 
     function update_table(gift_list) {
-        table = $("#gift-list");
-        table.empty()
-        gift_list.forEach(gift_list, function(gift_item) {
+        table = $("#gift_list");
+        table.empty();
+        gift_list.forEach(gift_item => 
             table.append(
                 make_row(gift_item)
-            );
-        });
+            )
+        );
     }
 
     data = $.getJSON("/gifts/",
