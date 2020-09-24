@@ -1,12 +1,12 @@
 import unittest
-from bson.decimal128 import Decimal128
 from gift_list.models.gifts import GiftList, GiftAddedTwiceError, GiftNotInListError, GiftAlreadyPurchasedError
+from gift_list.models import settings
 
 
 class TestGiftList(unittest.TestCase):
     def setUp(self):
         self.maxDiff = 1000
-        self.gl = GiftList()
+        self.gl = GiftList(settings.get_db_connection())
         self.gl.col.drop()
 
     def tearDown(self):

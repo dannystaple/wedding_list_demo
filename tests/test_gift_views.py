@@ -6,6 +6,7 @@ from flask import Flask
 
 from gift_list import views
 from gift_list.models import gifts
+from gift_list.models import settings
 
 
 class TestGiftSerialising(unittest.TestCase):
@@ -46,7 +47,7 @@ class TestGiftSerialising(unittest.TestCase):
 class TestGiftsView(unittest.TestCase):
     def setUp(self):
         self.maxDiff = 1000
-        self.gl = gifts.GiftList()
+        self.gl = gifts.GiftList(settings.get_db_connection())
         self.gl.col.drop()
 
     def tearDown(self):

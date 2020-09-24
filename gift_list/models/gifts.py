@@ -1,6 +1,7 @@
 from . import settings
 from .products import Product
 
+
 class GiftAddedTwiceError(RuntimeError):
     pass
 
@@ -12,11 +13,14 @@ class GiftNotInListError(RuntimeError):
 class GiftAlreadyPurchasedError(RuntimeError):
     pass
 
-class Gift():
+
+class Gift:
+    """Represents A gift in the list"""
     product: Product
 
     @staticmethod
     def from_bson(bson_data):
+        """Create a gift from mongo DB bson. Converts datatypes if needed"""
         new_item = Gift()
         new_item.bson = bson_data
         new_item.product = Product.from_bson(bson_data['product'])
@@ -32,11 +36,12 @@ class Gift():
 
 
 class GiftList:
-    def __init__(self):
-        db = settings.get_db_connection()
+    """The list of gifts. High level operations for searching and manipulating the gift list"""
+    def __init__(self, db):
         self.col = db['gifts']
 
-    def add(self, product_id):
+    def add(self, product_id: int):
+        """Add a gift into the list"""
         if self.col.count_documents({'product_id':product_id}):
             raise GiftAddedTwiceError(product_id)
         return self.col.insert_one(
@@ -46,13 +51,15 @@ class GiftList:
             }
         ).inserted_id
 
-    def remove(self, product_id):
+    def remove(self, product_id: int):
+        """Remove a gift from the list"""
         if self.col.count_documents({'product_id':product_id}) == 0:
             raise GiftNotInListError(product_id)
         
         self.col.delete_one({'product_id': product_id})
     
-    def purchase(self, product_id):
+    def purchase(self, product_id: int):
+        """Purchase the gift"""
         if self.col.count_documents({'product_id':product_id}) == 0:
             raise GiftNotInListError(product_id)
         if self.col.count_documents({
@@ -68,6 +75,10 @@ class GiftList:
         return self.col.count_documents({})
 
     def find(self, purchased=None):
+        """Find gifts. 
+        If specified, can filter for items that are purchased (set it to True)
+        or filter for items that are not (set it to false)
+        """
         pipeline = []
         if purchased is not None:
             pipeline.append({

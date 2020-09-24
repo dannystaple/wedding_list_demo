@@ -51,7 +51,7 @@ def serialise_gift_list_to_json(gift_items):
 
 @gift_list_bp.route('/gifts/', methods=['POST', 'GET'])
 def gifts():
-    gl = GiftList()
+    gl = GiftList(settings.get_db_connection())
     if request.method == 'POST':
         data = request.get_json()
         gl.add(product_id=data['product_id'])
@@ -62,7 +62,7 @@ def gifts():
 
 @gift_list_bp.route('/gifts/<product_id>/', methods=['DELETE', 'PATCH'])
 def modify_gift(product_id):
-    gl = GiftList()
+    gl = GiftList(settings.get_db_connection())
     product_id = int(product_id)
     if request.method == 'DELETE':
         gl.remove(product_id)
@@ -76,7 +76,7 @@ def modify_gift(product_id):
 
 @gift_list_bp.route('/gift_report.html')
 def gift_report():
-    gl = GiftList()
+    gl = GiftList(settings.get_db_connection())
     purchased = gl.find(purchased=True)
     not_purchased = gl.find(purchased=False)
     return render_template('gift_report.html',

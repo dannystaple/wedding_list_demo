@@ -1,4 +1,5 @@
 * Use Flask + Jquery for the front end.
+* Keep it simple - MVC
 * Github actions for CI testing.
 * Docker compose for desktop environment
 
