@@ -31,8 +31,7 @@ class Product():
 
 
 class ProductList:
-    def __init__(self):
-        db = settings.get_db_connection()
+    def __init__(self, db):
         self.col = db['products']
 
     def get(self, _id):

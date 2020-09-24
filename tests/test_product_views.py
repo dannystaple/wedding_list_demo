@@ -1,20 +1,18 @@
 import unittest
-import json
-
 from unittest import mock
 
-from gift_list import views
-from gift_list.models import gifts
-from gift_list.models import products
 from flask import Flask
 
+from gift_list import views
+from gift_list.models import products
+from gift_list.models import settings
 
 
 class TestProductSerialising(unittest.TestCase):
     def test_serialising_one_product(self):
         """It should output json compatible dict, converting the price"""
         # setup
-        product=mock.Mock(
+        product = mock.Mock(
             item_id=23,
             brand="Household Goods Ltd",
             price="228.49",
@@ -34,7 +32,7 @@ class TestProductSerialising(unittest.TestCase):
             },
             json_data
         )
-    
+
     def test_serialising_list(self):
         # setup
         product_1 = mock.Mock(
@@ -62,7 +60,7 @@ class TestProductSerialising(unittest.TestCase):
 class TestProductsView(unittest.TestCase):
     def setUp(self):
         self.maxDiff = 1000
-        self.pl = products.ProductList()
+        self.pl = products.ProductList(settings.get_db_connection())
 
     def setup_test_client(self):
         app = Flask(__name__)
@@ -79,6 +77,6 @@ class TestProductsView(unittest.TestCase):
             got_json = response.get_json()
             self.assertEqual(len(got_json), 20)
             self.assertEqual(got_json[0]['name'], "Tea pot")
-            self.assertEqual(got_json[3]['brand'],"KITCHENAID")
+            self.assertEqual(got_json[3]['brand'], "KITCHENAID")
             self.assertEqual(got_json[5]['_id'], 7)
             self.assertEqual(got_json[7]['price'], "105.00")

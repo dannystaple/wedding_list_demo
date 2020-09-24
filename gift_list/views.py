@@ -2,6 +2,7 @@ from flask import (Blueprint, render_template, abort, jsonify,
     request)
 from .models.gifts import GiftList
 from .models.products import ProductList
+from .models import settings
 
 gift_list_bp = Blueprint('gift_list', __name__, 
     template_folder='templates', static_folder='static')
@@ -33,7 +34,7 @@ def serialise_product_list_to_json(prod_items):
 
 @gift_list_bp.route('/products/')
 def products():
-    products = ProductList().find()
+    products = ProductList(settings.get_db_connection()).find()
     return jsonify(serialise_product_list_to_json(products))
 
 
