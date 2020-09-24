@@ -1,5 +1,4 @@
 from bson.decimal128 import Decimal128
-from . import settings
 
 
 class Product():

@@ -1,10 +1,10 @@
-from flask import (Blueprint, render_template, abort, jsonify,
-    request)
+from flask import (Blueprint, render_template, jsonify,
+                   request)
 from .models.gifts import GiftList
 from .models.products import ProductList
 from .models import settings
 
-gift_list_bp = Blueprint('gift_list', __name__, 
+gift_list_bp = Blueprint('gift_list', __name__,
     template_folder='templates', static_folder='static')
 
 @gift_list_bp.route('/')
@@ -70,7 +70,6 @@ def modify_gift(product_id):
         data = request.get_json()
         if data['purchase']:
             gl.purchase(product_id)
-    items = gl.find()
     return jsonify({'result': 'ok'})
 
 

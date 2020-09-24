@@ -1,4 +1,3 @@
-from . import settings
 from .products import Product
 
 
@@ -42,28 +41,28 @@ class GiftList:
 
     def add(self, product_id: int):
         """Add a gift into the list"""
-        if self.col.count_documents({'product_id':product_id}):
+        if self.col.count_documents({'product_id': product_id}):
             raise GiftAddedTwiceError(product_id)
         return self.col.insert_one(
             {
-                'product_id' :product_id, 
+                'product_id': product_id, 
                 'purchased': False
             }
         ).inserted_id
 
     def remove(self, product_id: int):
         """Remove a gift from the list"""
-        if self.col.count_documents({'product_id':product_id}) == 0:
+        if self.col.count_documents({'product_id': product_id}) == 0:
             raise GiftNotInListError(product_id)
         
         self.col.delete_one({'product_id': product_id})
     
     def purchase(self, product_id: int):
         """Purchase the gift"""
-        if self.col.count_documents({'product_id':product_id}) == 0:
+        if self.col.count_documents({'product_id': product_id}) == 0:
             raise GiftNotInListError(product_id)
         if self.col.count_documents({
-              'product_id':product_id,
+              'product_id': product_id,
               'purchased': True}) == 1:
             raise GiftAlreadyPurchasedError(product_id)
         query = {'product_id': product_id}

@@ -1,6 +1,5 @@
 import unittest
 from unittest import mock
-import json
 
 from flask import Flask
 
@@ -9,11 +8,12 @@ import mongo_mock_helper
 from gift_list import views
 from gift_list.models import gifts
 
+
 class TestGiftSerialising(unittest.TestCase):
     def test_serialising_one_gift(self):
         """It should output json compatible dict with the product"""
         # setup
-        product=mock.Mock(
+        product = mock.Mock(
             item_id=5,
             brand="Shiny Things Co",
             price="28.95",
@@ -47,7 +47,7 @@ class TestGiftSerialising(unittest.TestCase):
 class TestGiftsView(unittest.TestCase):
     def setUp(self):
         self.db, _ = mongo_mock_helper.get_mongo_mock_with_populated_products()
-        
+
         self.settings_patch = mock.patch('gift_list.views.settings.get_db_connection', return_value=self.db)
         self.settings_patch.start()
 

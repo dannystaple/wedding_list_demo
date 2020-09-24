@@ -7,8 +7,6 @@ import mongo_mock_helper
 
 from gift_list import views
 from gift_list.models import products
-from gift_list.models import settings
-from gift_list.staging import import_products
 
 
 class TestProductSerialising(unittest.TestCase):

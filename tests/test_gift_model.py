@@ -3,7 +3,6 @@ import unittest
 import mongo_mock_helper
 
 from gift_list.models.gifts import GiftList, GiftAddedTwiceError, GiftNotInListError, GiftAlreadyPurchasedError
-from gift_list.staging import import_products
 
 
 class TestGiftList(unittest.TestCase):
@@ -35,14 +34,6 @@ class TestGiftList(unittest.TestCase):
         self.id1=self.gl.add(product_id=9)
         self.id2=self.gl.add(product_id=13)
         self.id3=self.gl.add(product_id=19)
-
-    def test_buying_a_gift_in_list_should_set_flag(self):
-        # Setup
-        self.add_test_gifts()
-        # Test
-
-        self.gl.purchase(13)
-        # Assert
 
 
     def test_list_added_gifts(self):
