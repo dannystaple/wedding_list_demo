@@ -38,7 +38,7 @@ def serialise_gift_to_json(gift_bson):
     gift_data['_id'] = str(gift_bson['_id'])
     return gift_data
 
-def serialist_gift_list_to_json(gift_items):
+def serialise_gift_list_to_json(gift_items):
     return [serialise_gift_to_json(item) for item in gift_items]
 
 
@@ -50,12 +50,18 @@ def gifts():
         gl.add(product_id=data['product_id'])
 
     items = gl.find()
-    return jsonify(serialist_gift_list_to_json(items))
+    return jsonify(serialise_gift_list_to_json(items))
 
 
-@gift_list_bp.route('/gifts/<product_id>/', methods=['DELETE'])
+@gift_list_bp.route('/gifts/<product_id>/', methods=['DELETE', 'PATCH'])
 def modify_gift(product_id):
     gl = GiftList()
-    gl.remove(int(product_id))
+    product_id = int(product_id)
+    if request.method == 'DELETE':
+        gl.remove(product_id)
+    if request.method == 'PATCH':
+        data = request.get_json()
+        if data['purchase']:
+            gl.purchase(product_id)
     items = gl.find()
-    return jsonify(serialist_gift_list_to_json(items))
+    return jsonify({'result': 'ok'})

@@ -48,7 +48,6 @@ class GiftList:
         return self.col.count_documents({})
 
     def find(self, purchased=None):
-
         pipeline = []
         if purchased is not None:
             pipeline.append({
