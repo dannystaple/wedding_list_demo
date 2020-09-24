@@ -24,9 +24,7 @@ $(function() {
         );
     }
 
-    data = $.getJSON("/gifts/",
-        function(data) {
-            update_table(data);
-        });
-    
+    $.getJSON("/gifts/", function(data) {
+        update_table(data);
+    });
 });

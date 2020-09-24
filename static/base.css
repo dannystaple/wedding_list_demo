@@ -1,0 +1,7 @@
+.item_list tr:nth-child(odd) {
+    background-color: lightgrey;
+}
+
+.item_list tr:hover {
+    background-color: lightseagreen;
+}

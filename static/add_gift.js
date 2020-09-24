@@ -25,11 +25,21 @@ $(function() {
 
     function add_product() {
         let product_id = $( this ).attr("id").split("_")[1];
-        
-
+        $.ajax({
+            type: 'POST',
+            url: '/gifts/', 
+            data: JSON.stringify({
+                'product_id': parseInt(product_id)
+            }), 
+            contentType: "application/json",
+            dataType: 'json',
+            success: function() {
+                window.location.href = '/';
+            }
+        });
     }
 
-    data = $.getJSON("/products/", function(data) {
+    $.getJSON("/products/", function(data) {
         update_table(data);
         product_table.find("tr").click(add_product);
     });

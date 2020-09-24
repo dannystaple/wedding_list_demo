@@ -75,8 +75,8 @@ class TestGiftsView(unittest.TestCase):
 
     def test_it_should_be_able_to_add_gift_by_posting(self):
         # Setup - Add a few gifts
-        id1=self.gl.add(product_id=9)
-        id2=self.gl.add(product_id=13)
+        self.gl.add(product_id=9)
+        self.gl.add(product_id=13)
         new_product = 15
         # Test - make the post
         app = Flask(__name__)
@@ -90,3 +90,20 @@ class TestGiftsView(unittest.TestCase):
             gifts = list(self.gl.find())
             self.assertEqual(len(gifts), 3)
             self.assertEqual(gifts[-1]['product']['_id'], 15)
+
+    def test_it_should_be_able_to_remove_a_gift_with_delete(self):
+        self.gl.add(product_id=9)
+        self.gl.add(product_id=13)
+        # test - make the delete request
+        app = Flask(__name__)
+        app.register_blueprint(views.gift_list_bp, url_prefix='')
+        with app.test_client() as c:
+            #   delete by the product ID
+            response = c.delete('/gifts/13/')
+            self.assertEqual(response.status_code, 200, response.data)
+            # Assert
+            gifts = list(self.gl.find())
+            self.assertEqual(len(gifts), 1)
+
+
+

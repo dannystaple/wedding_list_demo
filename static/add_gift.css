@@ -2,11 +2,3 @@
     background-color: lightpink;
     border-radius: 3px;
 }
-
-#product_list tr:nth-child(odd) {
-    background-color: lightgrey;
-}
-
-#product_list tr:hover {
-    background-color: lightseagreen;
-}

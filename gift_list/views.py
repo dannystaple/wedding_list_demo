@@ -51,3 +51,11 @@ def gifts():
 
     items = gl.find()
     return jsonify(serialist_gift_list_to_json(items))
+
+
+@gift_list_bp.route('/gifts/<product_id>/', methods=['DELETE'])
+def modify_gift(product_id):
+    gl = GiftList()
+    gl.remove(int(product_id))
+    items = gl.find()
+    return jsonify(serialist_gift_list_to_json(items))
