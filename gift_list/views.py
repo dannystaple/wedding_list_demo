@@ -1,13 +1,18 @@
-from flask import Blueprint, render_template, abort, jsonify
+from flask import (Blueprint, render_template, abort, jsonify,
+    request)
 from .models.gifts import GiftList
 from .models.products import ProductList
 
-gift_list = Blueprint('gift_list', __name__, 
+gift_list_bp = Blueprint('gift_list', __name__, 
     template_folder='templates', static_folder='static')
 
-@gift_list.route('/')
-def page():
+@gift_list_bp.route('/')
+def index():
     return render_template('index.html')
+
+@gift_list_bp.route("/add_gift.html")
+def add_a_gift():
+    return render_template('add_gift.html')
 
 
 def serialise_product_to_json(prod_bson):
@@ -21,7 +26,7 @@ def serialise_product_list_to_json(prod_items):
     return [serialise_product_to_json(item) for item in prod_items]
 
 
-@gift_list.route('/products/')
+@gift_list_bp.route('/products/')
 def products():
     products = ProductList().find()
     return jsonify(serialise_product_list_to_json(products))
@@ -37,7 +42,12 @@ def serialist_gift_list_to_json(gift_items):
     return [serialise_gift_to_json(item) for item in gift_items]
 
 
-@gift_list.route('/gifts/')
+@gift_list_bp.route('/gifts/', methods=['POST', 'GET'])
 def gifts():
-    items = GiftList().find()
+    gl = GiftList()
+    if request.method == 'POST':
+        data = request.get_json()
+        gl.add(product_id=data['product_id'])
+
+    items = gl.find()
     return jsonify(serialist_gift_list_to_json(items))
