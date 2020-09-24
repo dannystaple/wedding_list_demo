@@ -1,17 +1,15 @@
 import unittest
 
-import mongomock
+import mongo_mock_helper
 
 from gift_list.models.gifts import GiftList, GiftAddedTwiceError, GiftNotInListError, GiftAlreadyPurchasedError
-from gift_list.models import settings
 from gift_list.staging import import_products
 
 
 class TestGiftList(unittest.TestCase):
     def setUp(self):
-        self.db = mongomock.MongoClient().db
-        self.prod_collection = self.db['products']
-        import_products.import_products('products.json', self.db)
+        self.db, _ = mongo_mock_helper.get_mongo_mock_with_populated_products()
+
         self.gifts_collection = self.db['gifts']
         self.maxDiff = 1000
         self.gl = GiftList(self.db)

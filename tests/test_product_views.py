@@ -3,9 +3,12 @@ from unittest import mock
 
 from flask import Flask
 
+import mongo_mock_helper
+
 from gift_list import views
 from gift_list.models import products
 from gift_list.models import settings
+from gift_list.staging import import_products
 
 
 class TestProductSerialising(unittest.TestCase):
@@ -60,7 +63,14 @@ class TestProductSerialising(unittest.TestCase):
 class TestProductsView(unittest.TestCase):
     def setUp(self):
         self.maxDiff = 1000
-        self.pl = products.ProductList(settings.get_db_connection())
+        self.db, _ = mongo_mock_helper.get_mongo_mock_with_populated_products()
+        self.settings_patch = mock.patch('gift_list.views.settings.get_db_connection', return_value=self.db)
+        self.settings_patch.start()
+
+        self.pl = products.ProductList(self.db)
+
+    def tearDown(self):
+        self.settings_patch.stop()
 
     def setup_test_client(self):
         app = Flask(__name__)

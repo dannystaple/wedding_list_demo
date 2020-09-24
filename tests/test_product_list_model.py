@@ -1,18 +1,14 @@
 import unittest
 
-import mongomock
+import mongo_mock_helper
 
 from gift_list.models.products import ProductList
-from gift_list.models import settings
-from gift_list.staging import import_products
 
 
 class TestProductList(unittest.TestCase):
     """Don't need to test add, just look up"""
     def setUp(self):
-        self.db = mongomock.MongoClient().db
-        self.prod_collection = self.db['products']
-        import_products.import_products('products.json', self.db)
+        self.db, self.prod_collection = mongo_mock_helper.get_mongo_mock_with_populated_products()
 
     def test_finding_product_by_id(self):
         pl = ProductList(self.db)

@@ -4,10 +4,10 @@ import json
 
 from flask import Flask
 
+import mongo_mock_helper
+
 from gift_list import views
 from gift_list.models import gifts
-from gift_list.models import settings
-
 
 class TestGiftSerialising(unittest.TestCase):
     def test_serialising_one_gift(self):
@@ -46,12 +46,16 @@ class TestGiftSerialising(unittest.TestCase):
 
 class TestGiftsView(unittest.TestCase):
     def setUp(self):
+        self.db, _ = mongo_mock_helper.get_mongo_mock_with_populated_products()
+        
+        self.settings_patch = mock.patch('gift_list.views.settings.get_db_connection', return_value=self.db)
+        self.settings_patch.start()
+
         self.maxDiff = 1000
-        self.gl = gifts.GiftList(settings.get_db_connection())
-        self.gl.col.drop()
+        self.gl = gifts.GiftList(self.db)
 
     def tearDown(self):
-        self.gl.col.drop()
+        self.settings_patch.stop()
 
     def setup_test_client(self):
         app = Flask(__name__)
