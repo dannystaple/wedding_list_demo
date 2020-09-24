@@ -95,10 +95,7 @@ class GiftList:
                 
             },
             {"$unwind": "$product"},
-            { "$project": {
-                    "product": {
-                        "currency": 0,
-                    },
+            {"$project": {
                     "product_id": 0
             }}
         ])
