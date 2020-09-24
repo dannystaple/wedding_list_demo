@@ -4,7 +4,7 @@ import json
 
 import sys
 import bson
-from models.products import ProductList
+from ..models.products import ProductList
 
 def main(products_file):
     pl = ProductList().col

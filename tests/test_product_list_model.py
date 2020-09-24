@@ -1,6 +1,8 @@
 import unittest
+import json
 from bson.decimal128 import Decimal128
 from gift_list.models.products import ProductList
+
 
 class TestProductList(unittest.TestCase):
     """Don't need to test add, just look up"""
