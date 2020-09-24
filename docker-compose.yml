@@ -11,6 +11,8 @@ services:
         stdin_open: true
         environment:
             DB: mongodb://root:example@mongo/
+        ports:
+            - 8080:80
         volumes:
             - ./:/srv
     mongo:
