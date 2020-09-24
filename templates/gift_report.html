@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" href="/static/gift_report.css">
+{% endblock %}
+{% block content %}
+    <h2>Purchased Gifts</h2>
+    <table class="purchased">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        {% for gift in purchased %}
+        <tr>
+            <td>{{ gift['product']['name'] }}</td>
+            <td>{{ gift['product']['brand'] }}</td>
+            <td class="money">{{ gift['product']['currency']}} {{ gift['product']['price'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Not purchased Gifts</h2>
+    <table class="not_purchased">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Stock Status</th>
+            </tr>
+        </thead>
+        {% for gift in not_purchased %}
+        <tr>
+            <td>{{ gift['product']['name'] }}</td>
+            <td>{{ gift['product']['brand'] }}</td>
+            <td class="money">{{ gift['product']['currency']}} {{ gift['product']['price'] }}</td>
+            <td class="money">{{ gift['product']['in_stock_quantity'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

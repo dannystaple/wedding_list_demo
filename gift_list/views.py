@@ -65,3 +65,13 @@ def modify_gift(product_id):
             gl.purchase(product_id)
     items = gl.find()
     return jsonify({'result': 'ok'})
+
+
+@gift_list_bp.route('/gift_report.html')
+def gift_report():
+    gl = GiftList()
+    purchased = gl.find(purchased=True)
+    not_purchased = gl.find(purchased=False)
+    return render_template('gift_report.html',
+        purchased=purchased,
+        not_purchased=not_purchased)

@@ -15,7 +15,15 @@
     padding-right: 8px;
 }
 
-body, .content {
+h2 {
+    font-family: cursive;
+}
+
+.money {
+    text-align: right;
+}
+
+body {
     padding: 0;
     margin: 0;
     border: 0

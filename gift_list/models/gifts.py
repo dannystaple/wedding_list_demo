@@ -11,6 +11,26 @@ class GiftNotInListError(RuntimeError):
 class GiftAlreadyPurchasedError(RuntimeError):
     pass
 
+# class Gift():
+#     @staticmethod
+#     def from_bson(bson_data):
+#         new_item = Gift()
+#         new_item.bson = bson_data
+#         return new_item
+
+#     @property
+#     def name(self):
+#         return self.bson['product']['name']
+
+#     @property
+#     def brand(self):
+#         return self.bson['product']['brand']
+
+#     @property
+#     def price(self):
+#         return str(self.bson['product']['price']
+    
+
 class GiftList:
     def __init__(self):
         db = settings.get_db_connection()
