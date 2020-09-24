@@ -1,60 +1,62 @@
 import unittest
 import json
-from bson.decimal128 import Decimal128
+
+from unittest import mock
+
 from gift_list import views
 from gift_list.models import gifts
 from gift_list.models import products
 from flask import Flask
 
 
+
 class TestProductSerialising(unittest.TestCase):
     def test_serialising_one_product(self):
         """It should output json compatible dict, converting the price"""
         # setup
-        product = products.Product.from_bson({
-            "_id": 9,
-            "name": "Polka Bedding Set, King, Silver",
-            "brand": "BEAU LIVING",
-            "price": Decimal128("105.00"),
-            "in_stock_quantity": 5
-        })
+        product=mock.Mock(
+            item_id=23,
+            brand="Household Goods Ltd",
+            price="228.49",
+            in_stock_quantity=17
+        )
+        product.name = "Mixer with bling"
         # test
         json_data = views.serialise_product_to_json(product)
         # assert
         self.assertDictContainsSubset(
             {
-                "_id": 9,
-                "name": "Polka Bedding Set, King, Silver",
-                "brand": "BEAU LIVING",
-                "price": "105.00",
-                "in_stock_quantity": 5
+                "_id": 23,
+                "name": "Mixer with bling",
+                "brand": "Household Goods Ltd",
+                "price": "228.49",
+                "in_stock_quantity": 17
             },
             json_data
         )
     
     def test_serialising_list(self):
         # setup
-        product_list = [products.Product.from_bson(item) for item in [
-            {
-                "_id": 9,
-                "name": "Polka Bedding Set, King, Silver",
-                "brand": "BEAU LIVING",
-                "price": Decimal128("105.00"),
-                "in_stock_quantity": 5
-            },
-            {
-                "_id": 8,
-                "name": "50's Style Stand Mixer, Black",
-                "brand": "SMEG SMALL APPLIANCES",
-                "price": Decimal128("449.99"),
-                "in_stock_quantity": 1
-            }
-        ]]
+        product_1 = mock.Mock(
+            item_id=5,
+            brand="Shiny Things Co",
+            price="28.95",
+            in_stock_quantity=42
+        )
+        product_1.name = "Sparkly wedding thing"
+        product_2 = mock.Mock(
+            item_id=23,
+            brand="Household Goods Ltd",
+            price="228.49",
+            in_stock_quantity=17
+        )
+        product_2.name = "Mixer with bling"
+        product_list = [product_1, product_2]
         # test
         json_data = views.serialise_product_list_to_json(product_list)
         # assert
-        self.assertEqual(json_data[0]['price'], "105.00")
-        self.assertEqual(json_data[1]['price'], "449.99")
+        self.assertEqual(json_data[0]['price'], "28.95")
+        self.assertEqual(json_data[1]['price'], "228.49")
 
 
 class TestProductsView(unittest.TestCase):

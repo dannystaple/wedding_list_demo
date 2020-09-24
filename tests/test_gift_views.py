@@ -1,41 +1,42 @@
 import unittest
+from unittest import mock
 import json
-from bson.decimal128 import Decimal128
-from bson.objectid import ObjectId
+
+from flask import Flask
+
 from gift_list import views
 from gift_list.models import gifts
-from flask import Flask
 
 
 class TestGiftSerialising(unittest.TestCase):
     def test_serialising_one_gift(self):
-        """It should outp[ut json compatible dict with the product"""
+        """It should output json compatible dict with the product"""
         # setup
-        product = {
-            "_id": 9,
-            "name": "Polka Bedding Set, King, Silver",
-            "brand": "BEAU LIVING",
-            "price": Decimal128("105.00"),
-            "in_stock_quantity": 5
-        }
-        gift = gifts.Gift.from_bson({
-            "_id": ObjectId(),
-            "product": product,
-            "purchased": False
-        })
+        product=mock.Mock(
+            item_id=5,
+            brand="Shiny Things Co",
+            price="28.95",
+            in_stock_quantity=42
+        )
+        product.name = "Sparkly wedding thing"
+        gift = mock.Mock(
+            product=product,
+            purchased=False,
+            item_id="abc"
+        )
         # test
         gift_data = views.serialise_gift_to_json(gift)
         # assert
         self.assertDictEqual(
             gift_data,
             {
-                "_id": gift.item_id,
+                "_id": "abc",
                 "product": {
-                    "_id": 9,
-                    "name": "Polka Bedding Set, King, Silver",
-                    "brand": "BEAU LIVING",
-                    "price": "105.00",
-                    "in_stock_quantity": 5
+                    "_id": 5,
+                    "name": "Sparkly wedding thing",
+                    "brand": "Shiny Things Co",
+                    "price": "28.95",
+                    "in_stock_quantity": 42
                 },
                 "purchased": False
             }
