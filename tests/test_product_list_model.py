@@ -9,17 +9,11 @@ class TestProductList(unittest.TestCase):
     def test_finding_product_by_id(self):
         pl = ProductList()
         product = pl.get(9)
-        self.assertEqual(product['name'], "Polka Bedding Set, King, Silver")
-        self.assertDictContainsSubset(
-            {
-                "_id": 9,
-                "name": "Polka Bedding Set, King, Silver",
-                "brand": "BEAU LIVING",
-                "price": Decimal128("105.00"),
-                "in_stock_quantity": 5
-            },
-            product
-        )
+        self.assertEqual(product.name, "Polka Bedding Set, King, Silver")
+        self.assertEqual(product.item_id, 9)
+        self.assertEqual(product.brand, "BEAU LIVING")
+        self.assertEqual(product.price, "105.00")
+        self.assertEqual(product.in_stock_quantity, 5)
 
     def test_finding_by_text_product(self):
         """We shouldn't make customer choose brand, 
@@ -28,32 +22,22 @@ class TestProductList(unittest.TestCase):
         products = pl.find(text="Bedd")
         as_list = list(products)
         self.assertEqual(len(as_list), 2)
-        self.assertDictContainsSubset(
-            {
-                "_id": 9,
-                "name": "Polka Bedding Set, King, Silver",
-                "brand": "BEAU LIVING",
-                "price": Decimal128("105.00"),
-                "in_stock_quantity": 5
-            },
-            as_list[0]
-        )
+        self.assertEqual(as_list[0].name, "Polka Bedding Set, King, Silver")
+        self.assertEqual(as_list[0].item_id, 9)
+        self.assertEqual(as_list[0].brand, "BEAU LIVING")
+        self.assertEqual(as_list[0].price, "105.00")
+        self.assertEqual(as_list[0].in_stock_quantity, 5)
 
     def test_finding_products_by_text_brand(self):
         pl = ProductList()
         products = pl.find(text='SME')
         as_list = list(products)
         self.assertEqual(len(as_list), 2)
-        self.assertDictContainsSubset(
-            {
-                "_id": 7,
-                "name": "50's Style Stand Mixer, Full-Colour White",
-                "brand": "SMEG SMALL APPLIANCES",
-                "price": Decimal128("449.00"),
-                "in_stock_quantity": 0
-            },
-            as_list[0]
-        )
+        self.assertEqual(as_list[0].name, "50's Style Stand Mixer, Full-Colour White")
+        self.assertEqual(as_list[0].item_id, 7)
+        self.assertEqual(as_list[0].brand, "SMEG SMALL APPLIANCES")
+        self.assertEqual(as_list[0].price, "449.00")
+        self.assertEqual(as_list[0].in_stock_quantity, 0)
 
     def test_show_all(self):
         pl = ProductList()
@@ -72,16 +56,11 @@ class TestProductList(unittest.TestCase):
         products = pl.find(text="SME", in_stock=True)
         as_list = list(products)
         self.assertEqual(len(as_list), 1)
-        self.assertDictContainsSubset(
-            {
-                "_id": 8,
-                "name": "50's Style Stand Mixer, Black",
-                "brand": "SMEG SMALL APPLIANCES",
-                "price": Decimal128("449.99"),
-                "in_stock_quantity": 1
-            },
-            as_list[0]
-        )
+        self.assertEqual(as_list[0].name, "50's Style Stand Mixer, Black")
+        self.assertEqual(as_list[0].item_id, 8)
+        self.assertEqual(as_list[0].brand, "SMEG SMALL APPLIANCES")
+        self.assertEqual(as_list[0].price, "449.99")
+        self.assertEqual(as_list[0].in_stock_quantity, 1)
 
     def test_price_less_than(self):
         pl = ProductList()
@@ -95,4 +74,3 @@ class TestProductList(unittest.TestCase):
         as_list = list(products)
         self.assertEqual(len(as_list), 8)
         
-

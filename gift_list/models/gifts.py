@@ -1,4 +1,5 @@
 from . import settings
+from .products import Product
 
 class GiftAddedTwiceError(RuntimeError):
     pass
@@ -11,25 +12,24 @@ class GiftNotInListError(RuntimeError):
 class GiftAlreadyPurchasedError(RuntimeError):
     pass
 
-# class Gift():
-#     @staticmethod
-#     def from_bson(bson_data):
-#         new_item = Gift()
-#         new_item.bson = bson_data
-#         return new_item
+class Gift():
+    product: Product
 
-#     @property
-#     def name(self):
-#         return self.bson['product']['name']
+    @staticmethod
+    def from_bson(bson_data):
+        new_item = Gift()
+        new_item.bson = bson_data
+        new_item.product = Product.from_bson(bson_data['product'])
+        return new_item
 
-#     @property
-#     def brand(self):
-#         return self.bson['product']['brand']
+    @property
+    def purchased(self) -> str:
+        return self.bson['purchased']
 
-#     @property
-#     def price(self):
-#         return str(self.bson['product']['price']
-    
+    @property
+    def item_id(self) -> str:
+        return str(self.bson['_id'])
+
 
 class GiftList:
     def __init__(self):
@@ -91,4 +91,4 @@ class GiftList:
                     "product_id": 0
             }}
         ])
-        return self.col.aggregate(pipeline)
+        return (Gift.from_bson(item) for item in self.col.aggregate(pipeline))

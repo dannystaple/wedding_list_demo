@@ -1,8 +1,6 @@
-* Use Flask + Bootstrap + Angular for the front end.
+* Use Flask + Jquery for the front end.
 * Github actions for CI testing.
 * Docker compose for desktop environment
-* This is a single gift list. I could just go with MySQL and SqlAlchemy for it.
-
 
 Front End:
 
@@ -17,12 +15,18 @@ Front End:
         * Purchase section
         * Not Purchased section.
 
+# How It could be improved
 
-Known Bugs:
+* Selenium for front end testing - using a Docker firefox webdriver image.
+* Mocha for JS testing
+
+# Known Bugs
+
 * We could definitely handle the "gift added twice" - pass it to the browser, or filter the list of gifts by that.
 * Definitely needs an "are you sure" button.
 
-Addable features:
-* The models allow fitlering by price. Could put a price field and button.
+# Addable features
+
+* The models allow filtering by price. Could put a price field and button.
 * Filtering by brands - perhaps lookup by brands/filter in the add list.
 

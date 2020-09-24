@@ -6,7 +6,7 @@ import sys
 import bson
 from ..models.products import ProductList
 
-def main(products_file):
+def import_products(products_file):
     pl = ProductList().col
     pl.drop()
     pl = ProductList().col
@@ -21,4 +21,4 @@ def main(products_file):
             pl.insert_one(product)
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    import_products(sys.argv[1])

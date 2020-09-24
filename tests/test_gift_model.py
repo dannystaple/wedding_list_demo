@@ -49,44 +49,15 @@ class TestGiftList(unittest.TestCase):
         self.add_test_gifts()
         # Test - get this list
         gifts = list(self.gl.find())
-        self.assertListEqual(
-            gifts,
-            [
-                {
-                    "_id": self.id1,
-                    "product": {
-                        "_id": 9,
-                        "name": "Polka Bedding Set, King, Silver",
-                        "brand": "BEAU LIVING",
-                        "price": Decimal128("105.00"),
-                        "in_stock_quantity": 5
-                    },
-                    "purchased": False
-                },
-                {
-                    "_id": self.id2,
-                    "product": {
-                        "_id": 13,
-                        "name": "Falcon T2 Square Parasol, 2.7m, Taupe",
-                        "brand": "GARDENSTORE",
-                        "price": Decimal128("344.99"),
-                        "in_stock_quantity": 5
-                    },
-                    "purchased": False
-                },
-                {
-                    "_id": self.id3,
-                    "product": {
-                        "_id": 19,
-                        "name": "Sea Green Honeycomb Glass Lamp",
-                        "brand": "GRAHAM & GREEN",
-                        "price": Decimal128("95.00"),
-                        "in_stock_quantity": 4
-                    },
-                    "purchased": False
-                }
-            ]
-        )
+        self.assertEqual(len(gifts), 3)
+        self.assertEqual(gifts[0].item_id, str(self.id1))
+        self.assertEqual(gifts[0].product.name, "Polka Bedding Set, King, Silver")
+        self.assertEqual(gifts[0].product.brand, "BEAU LIVING")
+        self.assertEqual(gifts[0].product.price, "105.00")
+        self.assertEqual(gifts[0].product.in_stock_quantity, 5)
+        self.assertEqual(gifts[0].product.item_id, 9)
+        self.assertEqual(gifts[1].product.item_id, 13)
+        self.assertEqual(gifts[2].product.item_id, 19)
 
     def test_buying_a_gift_in_list_should_set_flag(self):
         # Setup
@@ -96,20 +67,8 @@ class TestGiftList(unittest.TestCase):
         self.gl.purchase(13)
         # Assert
         gifts = list(self.gl.find())
-        self.assertDictEqual(
-            gifts[1],
-            {
-                "_id": self.id2,
-                "product": {
-                    "_id": 13,
-                    "name": "Falcon T2 Square Parasol, 2.7m, Taupe",
-                    "brand": "GARDENSTORE",
-                    "price": Decimal128("344.99"),
-                    "in_stock_quantity": 5
-                },
-                "purchased": True
-            },
-        )
+        self.assertEqual(gifts[1].product.item_id, 13)
+        self.assertTrue(gifts[1].purchased)
 
     def test_it_should_reject_buying_a_gift_not_in_list(self):
         # Setup
@@ -136,10 +95,10 @@ class TestGiftList(unittest.TestCase):
         # assert
         gifts = list(self.gl.find(purchased=True))
         self.assertEqual(len(gifts), 2)
-        self.assertEqual(gifts[0]['product']['_id'], 13)
-        self.assertTrue(gifts[0]['purchased'])
-        self.assertEqual(gifts[1]['product']['_id'], 17)
-        self.assertTrue(gifts[1]['purchased'])
+        self.assertEqual(gifts[0].product.item_id, 13)
+        self.assertTrue(gifts[0].purchased)
+        self.assertEqual(gifts[1].product.item_id, 17)
+        self.assertTrue(gifts[1].purchased)
 
     def test_it_should_filter_by_not_purchased_gifts(self):
         # setup
@@ -151,10 +110,10 @@ class TestGiftList(unittest.TestCase):
         # assert
         gifts = list(self.gl.find(purchased=False))
         self.assertEqual(len(gifts), 2)
-        self.assertEqual(gifts[0]['product']['_id'], 9)
-        self.assertFalse(gifts[0]['purchased'])
-        self.assertEqual(gifts[1]['product']['_id'], 19)
-        self.assertFalse(gifts[1]['purchased'])
+        self.assertEqual(gifts[0].product.item_id, 9)
+        self.assertFalse(gifts[0].purchased)
+        self.assertEqual(gifts[1].product.item_id, 19)
+        self.assertFalse(gifts[1].purchased)
 
     def test_removing_a_gift_from_a_list(self):
         # setup
@@ -163,33 +122,9 @@ class TestGiftList(unittest.TestCase):
         self.gl.remove(19)
         # assert
         gifts = list(self.gl.find())
-        self.assertListEqual(
-            gifts,
-            [
-                {
-                    "_id": self.id1,
-                    "product": {
-                        "_id": 9,
-                        "name": "Polka Bedding Set, King, Silver",
-                        "brand": "BEAU LIVING",
-                        "price": Decimal128("105.00"),
-                        "in_stock_quantity": 5
-                    },
-                    "purchased": False
-                },
-                {
-                    "_id": self.id2,
-                    "product": {
-                        "_id": 13,
-                        "name": "Falcon T2 Square Parasol, 2.7m, Taupe",
-                        "brand": "GARDENSTORE",
-                        "price": Decimal128("344.99"),
-                        "in_stock_quantity": 5
-                    },
-                    "purchased": False
-                }
-            ]
-        )
+        self.assertEqual(len(gifts), 2)
+        self.assertEqual(gifts[0].product.item_id, 9)
+        self.assertEqual(gifts[1].product.item_id, 13)
 
     def test_removing_something_already_removed_should_raise_error(self):
         # test

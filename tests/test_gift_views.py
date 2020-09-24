@@ -18,18 +18,18 @@ class TestGiftSerialising(unittest.TestCase):
             "price": Decimal128("105.00"),
             "in_stock_quantity": 5
         }
-        gift = {
+        gift = gifts.Gift.from_bson({
             "_id": ObjectId(),
             "product": product,
             "purchased": False
-        }
+        })
         # test
         gift_data = views.serialise_gift_to_json(gift)
         # assert
         self.assertDictEqual(
             gift_data,
             {
-                "_id": str(gift['_id']),
+                "_id": gift.item_id,
                 "product": {
                     "_id": 9,
                     "name": "Polka Bedding Set, King, Silver",
@@ -91,7 +91,7 @@ class TestGiftsView(unittest.TestCase):
             # Assert
             gifts = list(self.gl.find())
             self.assertEqual(len(gifts), 3)
-            self.assertEqual(gifts[-1]['product']['_id'], 15)
+            self.assertEqual(gifts[-1].product.item_id, 15)
 
     def test_it_should_be_able_to_remove_a_gift_with_delete(self):
         self.gl.add(product_id=9)
@@ -117,4 +117,4 @@ class TestGiftsView(unittest.TestCase):
             self.assertEqual(response.status_code, 200, response.data)
             # Assert
             gifts = list(self.gl.find())
-            self.assertTrue(gifts[1]['purchased'])
+            self.assertTrue(gifts[1].purchased)

@@ -15,11 +15,16 @@ def add_a_gift():
     return render_template('add_gift.html')
 
 
-def serialise_product_to_json(prod_bson):
+def serialise_product_to_json(product):
     """Serialise a single product (note - json ready, not json)"""
-    json_data = {key: value for key, value in prod_bson.items() if key != "price"}
-    json_data['price'] = str(prod_bson['price'])
-    return json_data
+    return {
+        "_id": product.item_id,
+        "name": product.name,
+        "brand": product.brand,
+        "price": product.price,
+        "in_stock_quantity": product.in_stock_quantity
+    }
+
 
 def serialise_product_list_to_json(prod_items):
     """Serialise a product list (note - json ready, not json)"""
@@ -32,11 +37,12 @@ def products():
     return jsonify(serialise_product_list_to_json(products))
 
 
-def serialise_gift_to_json(gift_bson):
-    gift_data = {key: value for key, value in gift_bson.items() if key not in ["price", "_id"]}
-    gift_data['product'] = serialise_product_to_json(gift_bson['product'])
-    gift_data['_id'] = str(gift_bson['_id'])
-    return gift_data
+def serialise_gift_to_json(gift):
+    return {
+        "purchased": gift.purchased,
+        "product": serialise_product_to_json(gift.product),
+        "_id": gift.item_id
+    }
 
 def serialise_gift_list_to_json(gift_items):
     return [serialise_gift_to_json(item) for item in gift_items]

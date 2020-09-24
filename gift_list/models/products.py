@@ -2,13 +2,41 @@ from bson.decimal128 import Decimal128
 from . import settings
 
 
+class Product():
+    @staticmethod
+    def from_bson(bson_data):
+        new_item = Product()
+        new_item.bson = bson_data
+        return new_item
+
+    @property
+    def name(self):
+        return self.bson['name']
+
+    @property
+    def brand(self):
+        return self.bson['brand']
+
+    @property
+    def price(self):
+        return str(self.bson['price'])
+
+    @property
+    def in_stock_quantity(self):
+        return self.bson['in_stock_quantity']
+
+    @property
+    def item_id(self):
+        return self.bson['_id']
+
+
 class ProductList:
     def __init__(self):
         db = settings.get_db_connection()
         self.col = db['products']
 
     def get(self, _id):
-        return self.col.find_one({'_id': _id})
+        return Product.from_bson(self.col.find_one({'_id': _id}))
 
     def find(self, text='', in_stock=None, price_lt=None,
             price_gt=None):
@@ -26,4 +54,4 @@ class ProductList:
         if price_gt is not None:
             gt_value = Decimal128(str(price_gt))
             filter['price'] = {'$gt': gt_value}
-        return self.col.find(filter)
+        return (Product.from_bson(item) for item in self.col.find(filter))
