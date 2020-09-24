@@ -16,6 +16,11 @@ Front End:
         * Purchase section
         * Not Purchased section.
 
+# Problems I encounterred
+
+* Mocking out the mongodb was a tad trickier than I remember, but all good.
+* 
+
 # How It could be improved
 
 * Selenium for front end testing - using a Docker firefox webdriver image.

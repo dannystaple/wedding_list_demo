@@ -1,7 +1,8 @@
 from ..models.gifts import GiftList
-
+from ..models import settings
+s
 def make_test_gifts():
-    gl = GiftList()
+    gl = GiftList(settings.get_db_connection())
     gl.add(9)
     gl.add(13)
     gl.add(19)
